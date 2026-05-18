@@ -1,0 +1,95 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../sections/Hero.astro';
+import Services from '../sections/Services.astro';
+import Projects from '../sections/Projects.astro';
+import About from '../sections/About.astro';
+import Testimonials from '../sections/Testimonials.astro';
+import CTA from '../sections/CTA.astro';
+import Contact from '../sections/Contact.astro';
+import { site } from '../config/site';
+
+// ===== PERSONALIZAR CONTENIDO AQUÍ =====
+
+const servicios = [
+  {
+    icon: "🔧",
+    title: "Servicio 1",
+    description: "Descripción breve del servicio. 1-2 líneas que expliquen el valor para el cliente.",
+  },
+  {
+    icon: "⚡",
+    title: "Servicio 2",
+    description: "Descripción breve del servicio. 1-2 líneas que expliquen el valor para el cliente.",
+  },
+  {
+    icon: "🏗️",
+    title: "Servicio 3",
+    description: "Descripción breve del servicio. 1-2 líneas que expliquen el valor para el cliente.",
+  },
+];
+
+const proyectos = [
+  {
+    image: "/images/proyectos/proyecto-01.webp",
+    title: "Nombre del proyecto",
+    client: "Cliente",
+    category: "Categoría",
+    description: "Breve descripción del trabajo realizado.",
+  },
+  {
+    image: "/images/proyectos/proyecto-02.webp",
+    title: "Nombre del proyecto",
+    client: "Cliente",
+    category: "Categoría",
+    description: "Breve descripción del trabajo realizado.",
+  },
+  {
+    image: "/images/proyectos/proyecto-03.webp",
+    title: "Nombre del proyecto",
+    client: "Cliente",
+    category: "Categoría",
+    description: "Breve descripción del trabajo realizado.",
+  },
+];
+
+const testimonios = [
+  {
+    quote: "Testimonio del cliente sobre la calidad del servicio recibido.",
+    name: "Nombre del cliente",
+    role: "Cargo",
+    company: "Empresa",
+  },
+];
+---
+
+<BaseLayout title={`${site.name} — ${site.tagline}`}>
+  <Hero
+    title="Título principal que comunica tu propuesta de valor"
+    subtitle="Subtítulo que amplía la propuesta y genera confianza. Menciona ubicación y experiencia."
+    backgroundImage="/images/hero/hero-principal.webp"
+  />
+
+  <Services
+    title="Nuestros servicios"
+    subtitle="Lo que hacemos mejor para ti"
+    services={servicios}
+  />
+
+  <Projects
+    title="Proyectos realizados"
+    subtitle="Evidencia real de nuestro trabajo"
+    projects={proyectos}
+  />
+
+  <About />
+
+  <Testimonials
+    title="Lo que dicen nuestros clientes"
+    testimonials={testimonios}
+  />
+
+  <CTA />
+
+  <Contact />
+</BaseLayout>

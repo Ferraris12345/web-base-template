@@ -1,0 +1,79 @@
+---
+import Container from '../components/ui/Container.astro';
+import Button from '../components/ui/Button.astro';
+import { site } from '../config/site';
+
+interface Props {
+  title?: string;
+  subtitle?: string;
+  description?: string;
+  image?: string;
+  stats?: Array<{ value: string; label: string }>;
+  ctaLabel?: string;
+  ctaHref?: string;
+}
+
+const {
+  title = 'Sobre nosotros',
+  subtitle = 'Experiencia y compromiso',
+  description = 'Somos una empresa dedicada a brindar soluciones de calidad. Nuestro equipo combina experiencia técnica con un enfoque centrado en el cliente para entregar resultados excepcionales en cada proyecto.',
+  image = '/images/about/nosotros.webp',
+  stats = [
+    { value: '10+', label: 'Años de experiencia' },
+    { value: '150+', label: 'Proyectos completados' },
+    { value: '98%', label: 'Clientes satisfechos' },
+  ],
+  ctaLabel = 'Contáctanos',
+  ctaHref = '#contacto',
+} = Astro.props;
+---
+
+<section class="py-20 lg:py-28" id="nosotros" data-reveal>
+  <Container>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+      <!-- Image -->
+      <div class="relative">
+        <div class="aspect-[4/3] rounded-2xl overflow-hidden">
+          <img
+            src={image}
+            alt={title}
+            class="w-full h-full object-cover"
+            loading="lazy"
+          />
+        </div>
+        <!-- Decorative accent -->
+        <div class="absolute -bottom-4 -right-4 w-24 h-24 bg-gray-100 rounded-2xl -z-10" aria-hidden="true"></div>
+      </div>
+
+      <!-- Content -->
+      <div>
+        <span class="text-sm font-medium text-gray-500 uppercase tracking-wider">
+          {subtitle}
+        </span>
+        <h2 class="mt-3 text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight">
+          {title}
+        </h2>
+        <p class="mt-6 text-gray-600 leading-relaxed">
+          {description}
+        </p>
+
+        {stats.length > 0 && (
+          <div class="mt-10 grid grid-cols-3 gap-6">
+            {stats.map(stat => (
+              <div>
+                <p class="text-2xl lg:text-3xl font-bold text-gray-900">{stat.value}</p>
+                <p class="text-sm text-gray-500 mt-1">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div class="mt-10">
+          <Button href={ctaHref} variant="primary">
+            {ctaLabel}
+          </Button>
+        </div>
+      </div>
+    </div>
+  </Container>
+</section>

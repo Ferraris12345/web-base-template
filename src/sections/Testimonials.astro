@@ -1,0 +1,59 @@
+---
+import Container from '../components/ui/Container.astro';
+import SectionHeading from '../components/ui/SectionHeading.astro';
+
+interface Testimonial {
+  quote: string;
+  name: string;
+  role?: string;
+  company?: string;
+  image?: string;
+}
+
+interface Props {
+  title?: string;
+  subtitle?: string;
+  testimonials: Testimonial[];
+}
+
+const {
+  title = 'Lo que dicen nuestros clientes',
+  subtitle,
+  testimonials,
+} = Astro.props;
+---
+
+<section class="py-20 lg:py-28 bg-gray-50" id="testimonios" data-reveal>
+  <Container>
+    <SectionHeading title={title} subtitle={subtitle} />
+
+    <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8">
+      {testimonials.map(t => (
+        <div class="p-8 rounded-2xl bg-white border border-gray-100 hover:shadow-sm transition-shadow duration-300">
+          <!-- Quote icon -->
+          <svg class="w-8 h-8 text-gray-200 mb-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H14.017zM0 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H0z" />
+          </svg>
+          <blockquote>
+            <p class="text-gray-700 leading-relaxed mb-6 italic">"{t.quote}"</p>
+          </blockquote>
+          <div class="flex items-center gap-3">
+            {t.image ? (
+              <img src={t.image} alt={t.name} class="w-10 h-10 rounded-full object-cover" loading="lazy" />
+            ) : (
+              <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-sm font-semibold text-gray-600">
+                {t.name.split(' ').map(n => n[0]).join('')}
+              </div>
+            )}
+            <div>
+              <p class="font-semibold text-gray-900 text-sm">{t.name}</p>
+              {(t.role || t.company) && (
+                <p class="text-xs text-gray-500">{[t.role, t.company].filter(Boolean).join(' · ')}</p>
+              )}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </Container>
+</section>

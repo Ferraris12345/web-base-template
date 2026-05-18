@@ -1,0 +1,110 @@
+---
+import { site } from '../config/site';
+
+interface FormField {
+  name: string;
+  label: string;
+  type: 'text' | 'email' | 'tel' | 'select' | 'textarea';
+  required?: boolean;
+  options?: string[];
+  placeholder?: string;
+}
+
+interface Props {
+  formspreeId?: string;
+  fields?: FormField[];
+}
+
+const { formspreeId = site.formspreeId, fields = [
+  { name: 'nombre', label: 'Nombre completo', type: 'text', required: true, placeholder: 'Tu nombre' },
+  { name: 'email', label: 'Email', type: 'email', required: true, placeholder: 'correo@ejemplo.com' },
+  { name: 'telefono', label: 'Teléfono', type: 'tel', required: false, placeholder: '81 1234 5678' },
+  { name: 'mensaje', label: 'Mensaje', type: 'textarea', required: true, placeholder: 'Cuéntanos sobre tu proyecto...' },
+] as FormField[] } = Astro.props;
+
+const action = formspreeId ? `https://formspree.io/f/${formspreeId}` : '#';
+---
+
+<form action={action} method="POST" class="space-y-5" id="contact-form">
+  {fields.map(field => (
+    <div>
+      <label for={field.name} class="block text-sm font-medium text-gray-700 mb-1.5">
+        {field.label} {field.required && <span class="text-red-500" aria-label="requerido">*</span>}
+      </label>
+      {field.type === 'textarea' ? (
+        <textarea
+          id={field.name}
+          name={field.name}
+          required={field.required}
+          placeholder={field.placeholder}
+          rows="4"
+          class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-400 focus:ring-1 focus:ring-gray-400 outline-none transition-colors duration-200 text-sm resize-none bg-white"
+        ></textarea>
+      ) : field.type === 'select' ? (
+        <select
+          id={field.name}
+          name={field.name}
+          required={field.required}
+          class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-400 focus:ring-1 focus:ring-gray-400 outline-none transition-colors duration-200 text-sm bg-white"
+        >
+          <option value="">Seleccionar...</option>
+          {field.options?.map(opt => <option value={opt}>{opt}</option>)}
+        </select>
+      ) : (
+        <input
+          type={field.type}
+          id={field.name}
+          name={field.name}
+          required={field.required}
+          placeholder={field.placeholder}
+          class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-400 focus:ring-1 focus:ring-gray-400 outline-none transition-colors duration-200 text-sm bg-white"
+        />
+      )}
+    </div>
+  ))}
+
+  <button
+    type="submit"
+    class="w-full py-3.5 px-6 bg-gray-900 text-white font-medium rounded-xl hover:bg-gray-800 active:scale-[0.98] transition-all duration-200 text-sm"
+  >
+    Enviar mensaje
+  </button>
+</form>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+    const originalText = btn.textContent;
+    btn.textContent = 'Enviando...';
+    btn.disabled = true;
+
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' },
+      });
+      if (res.ok) {
+        form.innerHTML = `
+          <div class="text-center py-12">
+            <div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <p class="text-lg font-semibold text-gray-900">Mensaje enviado</p>
+            <p class="text-gray-600 mt-2">Nos pondremos en contacto contigo pronto.</p>
+          </div>
+        `;
+      } else {
+        throw new Error();
+      }
+    } catch {
+      btn.textContent = originalText;
+      btn.disabled = false;
+      alert('Hubo un error al enviar. Intenta de nuevo o contáctanos por WhatsApp.');
+    }
+  });
+</script>

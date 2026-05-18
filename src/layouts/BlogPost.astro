@@ -1,0 +1,97 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Container from '../components/ui/Container.astro';
+import Button from '../components/ui/Button.astro';
+import { site } from '../config/site';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  date: string;
+  author?: string;
+  category?: string;
+}
+
+const {
+  title,
+  description,
+  image,
+  date,
+  author = site.name,
+  category,
+} = Astro.props;
+
+function formatDate(dateStr: string): string {
+  return new Date(dateStr).toLocaleDateString('es-MX', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
+---
+
+<BaseLayout title={`${title} — ${site.name}`} description={description} image={image}>
+  <article>
+    <!-- Header -->
+    {image && (
+      <div class="w-full aspect-[21/9] max-h-[480px] overflow-hidden">
+        <img
+          src={image}
+          alt={title}
+          class="w-full h-full object-cover"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </div>
+    )}
+
+    <Container narrow>
+      <div class="py-12 lg:py-16">
+        <!-- Meta -->
+        <div class="flex items-center gap-3 text-sm text-gray-500 mb-4">
+          {category && (
+            <span class="font-medium uppercase tracking-wider text-xs">{category}</span>
+          )}
+          {category && <span aria-hidden="true">&middot;</span>}
+          <time datetime={date}>{formatDate(date)}</time>
+          <span aria-hidden="true">&middot;</span>
+          <span>{author}</span>
+        </div>
+
+        <!-- Title -->
+        <h1 class="text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 tracking-tight leading-tight">
+          {title}
+        </h1>
+
+        {description && (
+          <p class="mt-4 text-lg text-gray-600 leading-relaxed">
+            {description}
+          </p>
+        )}
+
+        <hr class="my-10 border-gray-200" />
+
+        <!-- Content -->
+        <div class="prose prose-gray prose-lg max-w-none
+          prose-headings:font-bold prose-headings:tracking-tight
+          prose-a:text-gray-900 prose-a:underline prose-a:underline-offset-2
+          prose-img:rounded-xl
+          prose-pre:bg-gray-50 prose-pre:border prose-pre:border-gray-200
+        ">
+          <slot />
+        </div>
+
+        <!-- Back link -->
+        <div class="mt-16 pt-8 border-t border-gray-200">
+          <Button href="/blog" variant="ghost">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            Volver al blog
+          </Button>
+        </div>
+      </div>
+    </Container>
+  </article>
+</BaseLayout>

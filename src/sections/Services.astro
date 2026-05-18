@@ -1,0 +1,60 @@
+---
+import Container from '../components/ui/Container.astro';
+import SectionHeading from '../components/ui/SectionHeading.astro';
+
+interface Service {
+  icon: string;
+  title: string;
+  description: string;
+  href?: string;
+}
+
+interface Props {
+  title?: string;
+  subtitle?: string;
+  services: Service[];
+  columns?: 2 | 3 | 4;
+}
+
+const {
+  title = 'Nuestros servicios',
+  subtitle,
+  services,
+  columns = 3,
+} = Astro.props;
+
+const gridCols: Record<number, string> = {
+  2: 'md:grid-cols-2',
+  3: 'md:grid-cols-2 lg:grid-cols-3',
+  4: 'md:grid-cols-2 lg:grid-cols-4',
+};
+---
+
+<section class="py-20 lg:py-28" id="servicios" data-reveal>
+  <Container>
+    <SectionHeading title={title} subtitle={subtitle} />
+
+    <div class={`mt-16 grid grid-cols-1 ${gridCols[columns]} gap-8`}>
+      {services.map(service => (
+        <div class="group p-8 rounded-2xl bg-white border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all duration-300">
+          <div class="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform duration-300">
+            {service.icon}
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">{service.title}</h3>
+          <p class="text-gray-600 leading-relaxed text-sm">{service.description}</p>
+          {service.href && (
+            <a
+              href={service.href}
+              class="inline-flex items-center gap-1 text-sm font-medium text-gray-900 mt-4 hover:gap-2 transition-all duration-200"
+            >
+              Ver más
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          )}
+        </div>
+      ))}
+    </div>
+  </Container>
+</section>
